@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">EventPlannerTask</string>
+    <string name="home">Home</string>
+    <string name="upcoming">Upcoming</string>
 </resources>
