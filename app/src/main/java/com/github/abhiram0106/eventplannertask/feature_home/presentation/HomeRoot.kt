@@ -16,6 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.abhiram0106.eventplannertask.core.presentation.UiText
 import com.github.abhiram0106.eventplannertask.core.util.generateEventList
 import com.github.abhiram0106.eventplannertask.core.util.toDisplayString
@@ -24,6 +26,8 @@ import com.github.abhiram0106.eventplannertask.feature_home.presentation.compone
 import com.github.abhiram0106.eventplannertask.feature_home.presentation.components.CalendarComponent
 import com.github.abhiram0106.eventplannertask.feature_home.presentation.components.EventListCard
 import com.github.abhiram0106.eventplannertask.feature_home.presentation.components.EventListItem
+import com.github.abhiram0106.eventplannertask.feature_home.presentation.state_and_actions.HomeUiAction
+import com.github.abhiram0106.eventplannertask.feature_home.presentation.state_and_actions.HomeUiState
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
@@ -31,52 +35,49 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun HomeRoot(
     onShowSnackBar: suspend (message: UiText, actionLabel: UiText?) -> Boolean,
+    viewModel: HomeViewModel = viewModel(),
 ) {
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     HomeScreen(
-        events = generateEventList().groupBy { it.time.truncatedTo(ChronoUnit.MINUTES) }
+        uiState = uiState,
+        onUiAction = viewModel::onUiAction
     )
 }
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    events: Map<LocalTime, List<EventData>>,
+    uiState: HomeUiState,
+    onUiAction: (HomeUiAction) -> Unit,
 ) {
-    LaunchedEffect(Unit) {
-        Log.e("HomeScreen", "events = $events")
-    }
     Column {
-        var selectedDate by remember {
-            mutableStateOf(LocalDate.now())
-        }
         CalendarComponent(
-            selectedDate = selectedDate,
-            datesWhereAtLeastOneEventExists = listOf(LocalDate.now()),
-            onSelectDate = {
-                selectedDate = it
-                Log.e("HomeRoot", "select date = $it")
-            },
-            onCurrentMonthChanged = {
-                Log.e("HomeRoot", "month changed = $it")
-                // todo fetch datesWhereAtLeastOneEventExists
-            }
+            selectedDate = uiState.selectedDate,
+            datesWhereAtLeastOneEventExists = uiState.datesWhereAtLeastOneEventExists,
+            onSelectDate = { onUiAction(HomeUiAction.OnSelectDate(it)) },
+            onCurrentMonthChanged = { onUiAction(HomeUiAction.OnCurrentMonthChanged(it)) }
         )
         LazyColumn(
             modifier = modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 4.dp),
         ) {
-            events.forEach { time, eventList ->
+            uiState.events.forEach { time, eventList ->
                 item {
                     BookingListItemTimeIndicator(
                         time = time.toDisplayString(),
                         modifier = Modifier.padding(top = 12.dp, bottom = 4.dp)
                     )
                 }
-                items(eventList) { event ->
+                items(
+                    items = eventList,
+                    key = { it.id }
+                ) { event ->
                     EventListItem(
                         title = event.title,
                         description = event.description,
-                        onClick = {},
+                        onClick = { onUiAction(HomeUiAction.OnSelectEvent(event.id)) },
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
                 }

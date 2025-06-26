@@ -24,6 +24,7 @@ fun generateEventList(): List<EventData> {
     repeat(20) {
         list.add(
             EventData(
+                id = it,
                 title = "event title #$it",
                 description = "a description for the event #$it ".repeat(3),
                 date = LocalDate.now(),
@@ -32,6 +33,7 @@ fun generateEventList(): List<EventData> {
         )
         list.add(
             EventData(
+                id = it + 21,
                 title = "event title #$it 2",
                 description = "a description for the event #$it 2 ".repeat(3),
                 date = LocalDate.now(),
