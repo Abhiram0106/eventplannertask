@@ -30,6 +30,14 @@ fun generateEventList(): List<EventData> {
                 time = LocalTime.now().plusHours(it.toLong())
             )
         )
+        list.add(
+            EventData(
+                title = "event title #$it 2",
+                description = "a description for the event #$it 2 ".repeat(3),
+                date = LocalDate.now(),
+                time = LocalTime.now().plusHours(it.toLong())
+            )
+        )
     }
     return list
 }

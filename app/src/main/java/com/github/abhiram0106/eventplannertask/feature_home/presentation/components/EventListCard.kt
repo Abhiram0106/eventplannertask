@@ -34,7 +34,6 @@ fun EventListCard(
     Column(
         modifier = modifier.fillMaxWidth(),
     ) {
-        BookingListItemTimeIndicator(time = time.toDisplayString())
         Spacer(modifier = Modifier.height(5.dp))
         Row(modifier = Modifier.fillMaxWidth()) {
             EventListItem(
@@ -49,7 +48,7 @@ fun EventListCard(
 
 
 @Composable
-private fun BookingListItemTimeIndicator(
+fun BookingListItemTimeIndicator(
     modifier: Modifier = Modifier,
     time: String,
     lineColor: Color = MaterialTheme.colorScheme.primary
@@ -82,7 +81,7 @@ private fun BookingListItemTimeIndicator(
 }
 
 @Composable
-private fun EventListItem(
+fun EventListItem(
     modifier: Modifier = Modifier,
     title: String,
     description: String,
@@ -92,7 +91,7 @@ private fun EventListItem(
         color = MaterialTheme.colorScheme.primary,
         shape = MaterialTheme.shapes.extraSmall,
         onClick = onClick,
-        modifier = modifier.padding(horizontal = 6.dp)
+        modifier = modifier.fillMaxWidth().padding(horizontal = 6.dp)
     ) {
         Column(
             modifier = Modifier.padding(vertical = 4.dp, horizontal = 6.dp)
