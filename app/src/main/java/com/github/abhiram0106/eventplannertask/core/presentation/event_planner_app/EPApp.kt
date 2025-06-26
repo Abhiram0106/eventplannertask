@@ -16,12 +16,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.github.abhiram0106.eventplannertask.ui.theme.EventPlannerTaskTheme
 import com.github.abhiram0106.eventplannertask.R
+import com.github.abhiram0106.eventplannertask.core.navigation.EPNavHost
 
 @Composable
 fun EPApp(
@@ -29,6 +32,7 @@ fun EPApp(
 ) {
 
     val snackBarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     EventPlannerTaskTheme {
         Scaffold(
@@ -37,12 +41,20 @@ fun EPApp(
                 BottomAppBar(
                     actions = {
                         appState.topLevelDestinations.forEach { destination ->
+                            val isSelected =
+                                appState.isBottomNavItemSelected(destination.baseRoute)
+
                             IconButton(onClick = {
                                 appState.navigateToTopLevelDestination(destination)
                             }) {
                                 Icon(
                                     painter = painterResource(destination.icon),
-                                    contentDescription = destination.displayText.asString()
+                                    contentDescription = destination.displayText.asString(),
+                                    tint = if (isSelected) {
+                                        MaterialTheme.colorScheme.primary
+                                    } else {
+                                        MaterialTheme.colorScheme.onBackground
+                                    }
                                 )
                             }
                         }
@@ -69,7 +81,15 @@ fun EPApp(
                     .background(MaterialTheme.colorScheme.background)
                     .padding(paddingValues)
             ) {
-
+                EPNavHost(
+                    navHostController = appState.navController,
+                    onShowSnackBar = { message, actionLabel ->
+                        snackBarHostState.showSnackbar(
+                            message = message.asStringNonComposable(context),
+                            actionLabel = actionLabel?.asStringNonComposable(context),
+                        ) == SnackbarResult.ActionPerformed
+                    }
+                )
             }
         }
     }
