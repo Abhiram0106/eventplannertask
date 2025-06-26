@@ -60,4 +60,6 @@ dependencies {
 
     implementation(libs.jetbrains.compose.navigation)
     implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.calendar.composable)
 }
