@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.github.abhiram0106.eventplannertask.ui.theme.EventPlannerTaskTheme
+import com.github.abhiram0106.eventplannertask.ui.theme.AppTheme
 import com.github.abhiram0106.eventplannertask.R
 import com.github.abhiram0106.eventplannertask.core.navigation.EPNavHost
 
@@ -34,7 +34,7 @@ fun EPApp(
     val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
-    EventPlannerTaskTheme {
+    AppTheme {
         Scaffold(
             snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
             bottomBar = {
