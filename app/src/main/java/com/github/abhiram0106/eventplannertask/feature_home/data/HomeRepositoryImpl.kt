@@ -6,7 +6,8 @@ import com.github.abhiram0106.eventplannertask.feature_home.domain.asDate
 import com.github.abhiram0106.eventplannertask.feature_home.domain.model.EventData
 import com.github.abhiram0106.eventplannertask.feature_home.domain.toEntity
 import com.github.abhiram0106.eventplannertask.feature_home.domain.toLocalList
-import com.github.abhiram0106.eventplannertask.feature_home.domain.toMappedAsTimeAndLocal
+import com.github.abhiram0106.eventplannertask.feature_home.domain.toMappedAsDateToLocal
+import com.github.abhiram0106.eventplannertask.feature_home.domain.toMappedAsTimeToLocal
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDate
@@ -17,7 +18,7 @@ class HomeRepositoryImpl(
 ) : HomeRepository {
 
     override suspend fun getEventsByDate(date: LocalDate): Flow<Map<LocalTime, List<EventData>>> {
-        return eventDao.getEventsByDate(date).map { it.toMappedAsTimeAndLocal() }
+        return eventDao.getEventsByDate(date).map { it.toMappedAsTimeToLocal() }
     }
 
     override suspend fun getEventsByMonth(month: Int, year: Int): Flow<List<LocalDate>> {
@@ -26,8 +27,8 @@ class HomeRepositoryImpl(
         return eventDao.getEventsByMonth(monthStr, yearStr).map { it.asDate() }
     }
 
-    override suspend fun getUpcomingEvents(): Flow<List<EventData>> {
-        return eventDao.getUpcomingEvents().map { it.toLocalList() }
+    override suspend fun getUpcomingEvents(): Flow<Map<LocalDate, List<EventData>>> {
+        return eventDao.getUpcomingEvents().map { it.toMappedAsDateToLocal() }
     }
 
     override suspend fun upsertEvent(event: EventData) {

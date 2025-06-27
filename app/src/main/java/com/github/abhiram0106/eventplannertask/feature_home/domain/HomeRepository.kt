@@ -11,7 +11,7 @@ interface HomeRepository {
 
     suspend fun getEventsByMonth(month: Int, year: Int): Flow<List<LocalDate>>
 
-    suspend fun getUpcomingEvents(): Flow<List<EventData>>
+    suspend fun getUpcomingEvents(): Flow<Map<LocalDate, List<EventData>>>
 
     suspend fun upsertEvent(event: EventData)
 

@@ -69,6 +69,9 @@ fun EPNavHost(
             onSelectEvent = onSelectEvent
         )
 
-        upcomingEventsGraph(onShowSnackBar = onShowSnackBar)
+        upcomingEventsGraph(
+            onShowSnackBar = onShowSnackBar,
+            onSelectEvent = onSelectEvent
+        )
     }
 }

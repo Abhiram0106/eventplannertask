@@ -83,6 +83,7 @@ fun BookingListItemTimeIndicator(
 @Composable
 fun EventListItem(
     modifier: Modifier = Modifier,
+    time: String? = null,
     title: String,
     description: String,
     onClick: () -> Unit,
@@ -96,6 +97,13 @@ fun EventListItem(
         Column(
             modifier = Modifier.padding(vertical = 4.dp, horizontal = 6.dp)
         ) {
+            if (time != null) {
+                Text(
+                    text = time,
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Spacer(modifier = Modifier.height(3.dp))
+            }
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyMedium,

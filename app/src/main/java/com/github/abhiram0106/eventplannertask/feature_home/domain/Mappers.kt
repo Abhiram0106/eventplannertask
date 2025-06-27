@@ -19,9 +19,12 @@ fun List<EventEntity>.toLocalList(): List<EventData> = map { it.toLocal() }
 fun EventEntity.toLocalAsDate(): LocalDate = this.date
 fun List<EventEntity>.asDate(): List<LocalDate> = map { it.toLocalAsDate() }
 
-fun List<EventEntity>.toMappedAsTimeAndLocal(): Map<LocalTime, List<EventData>> =
+fun List<EventEntity>.toMappedAsTimeToLocal(): Map<LocalTime, List<EventData>> =
     map { it.toLocal() }
         .groupBy { it.time.truncatedTo(ChronoUnit.MINUTES) }
+
+fun List<EventEntity>.toMappedAsDateToLocal(): Map<LocalDate, List<EventData>> =
+    map { it.toLocal() }.groupBy { it.date }
 
 fun EventData.toEntity(): EventEntity = EventEntity(
     id = id,
