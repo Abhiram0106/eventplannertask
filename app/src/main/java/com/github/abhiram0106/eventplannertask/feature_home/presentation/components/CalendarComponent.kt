@@ -102,14 +102,24 @@ fun CalendarComponent(
         )
         val visibleMonth = rememberFirstVisibleMonthAfterScroll(state = monthState)
 
-        LaunchedEffect(
-            key1 = visibleMonth.yearMonth.monthValue,
-            key2 = visibleMonth.yearMonth.year
-        ) {
-            onCurrentMonthChanged(
-                visibleMonth.yearMonth.monthValue,
-                visibleMonth.yearMonth.year
-            )
+        if (isWeekMode) {
+            LaunchedEffect(
+                key1 = visibleWeek.days.first().date.monthValue,
+                key2 = visibleWeek.days.first().date.year
+            ) {
+                val firstDay = visibleWeek.days.first().date
+                onCurrentMonthChanged(firstDay.monthValue, firstDay.year)
+            }
+        } else {
+            LaunchedEffect(
+                key1 = visibleMonth.yearMonth.monthValue,
+                key2 = visibleMonth.yearMonth.year,
+            ) {
+                onCurrentMonthChanged(
+                    visibleMonth.yearMonth.monthValue,
+                    visibleMonth.yearMonth.year
+                )
+            }
         }
 
         SimpleCalendarTitle(

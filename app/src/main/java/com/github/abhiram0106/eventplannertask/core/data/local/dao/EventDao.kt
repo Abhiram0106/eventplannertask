@@ -17,11 +17,15 @@ interface EventDao {
     @Query(
         """
     SELECT * FROM EventEntity
-    WHERE strftime('%Y', date) = :year AND strftime('%m', date) = :month
+    WHERE (
+        (strftime('%Y', date) = :year AND strftime('%m', date) = :month)
+        OR
+        (strftime('%Y', date) = :nextYear AND strftime('%m', date) = :nextMonth)
+    )
     ORDER BY id ASC
 """
     )
-    fun getEventsByMonth(month: String, year: String): Flow<List<EventEntity>>
+    fun getEventsByMonth(month: String, year: String, nextMonth: String, nextYear: String): Flow<List<EventEntity>>
 
     @Query(
         """

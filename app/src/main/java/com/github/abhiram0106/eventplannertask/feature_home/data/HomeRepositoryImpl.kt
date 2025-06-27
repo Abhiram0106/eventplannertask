@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.YearMonth
 
 class HomeRepositoryImpl(
     private val eventDao: EventDao
@@ -24,7 +25,17 @@ class HomeRepositoryImpl(
     override suspend fun getEventsByMonth(month: Int, year: Int): Flow<List<LocalDate>> {
         val monthStr = month.toString().padStart(2, '0')
         val yearStr = year.toString()
-        return eventDao.getEventsByMonth(monthStr, yearStr).map { it.asDate() }
+
+        val next = YearMonth.of(year, month).plusMonths(1)
+        val nextMonthStr = next.monthValue.toString().padStart(2, '0')
+        val nextYearStr = next.year.toString()
+
+        return eventDao.getEventsByMonth(
+            month = monthStr,
+            year = yearStr,
+            nextMonth = nextMonthStr,
+            nextYear = nextYearStr
+        ).map { it.asDate() }
     }
 
     override suspend fun getUpcomingEvents(): Flow<Map<LocalDate, List<EventData>>> {
