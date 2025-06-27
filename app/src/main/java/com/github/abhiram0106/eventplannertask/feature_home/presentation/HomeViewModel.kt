@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.github.abhiram0106.eventplannertask.feature_home.domain.HomeRepository
+import com.github.abhiram0106.eventplannertask.feature_home.domain.model.EventData
 import com.github.abhiram0106.eventplannertask.feature_home.presentation.state_and_actions.HomeUiAction
 import com.github.abhiram0106.eventplannertask.feature_home.presentation.state_and_actions.HomeUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,6 +48,10 @@ class HomeViewModel(
                     it.copy(selectedDate = action.date)
                 }
             }
+
+            is HomeUiAction.OnDeleteEvent -> {
+                deleteEvent(action.event)
+            }
         }
     }
 
@@ -80,6 +85,10 @@ class HomeViewModel(
                     }
                 }
             }
+    }
+
+    private fun deleteEvent(event: EventData) = viewModelScope.launch {
+        homeRepository.deleteEvent(event)
     }
 }
 

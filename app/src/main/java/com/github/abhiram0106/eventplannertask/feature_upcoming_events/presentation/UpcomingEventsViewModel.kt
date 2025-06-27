@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.github.abhiram0106.eventplannertask.feature_home.domain.HomeRepository
+import com.github.abhiram0106.eventplannertask.feature_home.domain.model.EventData
+import com.github.abhiram0106.eventplannertask.feature_upcoming_events.presentation.state_and_actions.UpcomingEventsUiAction
 import com.github.abhiram0106.eventplannertask.feature_upcoming_events.presentation.state_and_actions.UpcomingEventsUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,6 +37,18 @@ class UpcomingEventsViewModel(
                 it.copy(events = events)
             }
         }
+    }
+
+    fun onUiAction(action: UpcomingEventsUiAction) {
+        when (action) {
+            is UpcomingEventsUiAction.OnDeleteEvent -> {
+                deleteEvent(action.event)
+            }
+        }
+    }
+
+    private fun deleteEvent(event: EventData) = viewModelScope.launch {
+        homeRepository.deleteEvent(event)
     }
 }
 

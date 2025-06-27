@@ -17,7 +17,8 @@ fun NavGraphBuilder.homeGraph(
     navigation<Graphs.Home>(startDestination = Screens.Home) {
         composable<Screens.Home> {
             HomeRoot(
-                onSelectEvent = onSelectEvent
+                onSelectEvent = onSelectEvent,
+                onShowSnackBar = onShowSnackBar
             )
         }
     }

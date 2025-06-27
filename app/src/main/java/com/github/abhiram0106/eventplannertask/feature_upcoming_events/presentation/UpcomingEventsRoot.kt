@@ -26,6 +26,8 @@ import com.github.abhiram0106.eventplannertask.core.util.toDisplayString
 import com.github.abhiram0106.eventplannertask.feature_home.domain.model.EventData
 import com.github.abhiram0106.eventplannertask.feature_home.presentation.components.BookingListItemTimeIndicator
 import com.github.abhiram0106.eventplannertask.feature_home.presentation.components.EventListItem
+import com.github.abhiram0106.eventplannertask.feature_home.presentation.state_and_actions.HomeUiAction
+import com.github.abhiram0106.eventplannertask.feature_upcoming_events.presentation.state_and_actions.UpcomingEventsUiAction
 import com.github.abhiram0106.eventplannertask.feature_upcoming_events.presentation.state_and_actions.UpcomingEventsUiState
 import kotlinx.coroutines.launch
 
@@ -42,7 +44,9 @@ fun UpcomingEventsRoot(
 
     UpcomingEventsScreen(
         uiState = uiState,
-        onSelectEvent = onSelectEvent
+        onUiAction = viewModel::onUiAction,
+        onSelectEvent = onSelectEvent,
+        onShowSnackBar = onShowSnackBar
     )
 
 }
@@ -51,7 +55,9 @@ fun UpcomingEventsRoot(
 fun UpcomingEventsScreen(
     modifier: Modifier = Modifier,
     uiState: UpcomingEventsUiState,
+    onUiAction: (UpcomingEventsUiAction) -> Unit,
     onSelectEvent: suspend (EventData) -> Unit,
+    onShowSnackBar: suspend (message: UiText, actionLabel: UiText?) -> Boolean,
 ) {
 
     val scope = rememberCoroutineScope()
@@ -102,6 +108,18 @@ fun UpcomingEventsScreen(
                             description = event.description,
                             time = event.time.toDisplayString(),
                             onClick = { scope.launch { onSelectEvent(event) } },
+                            onDeleteItem = {
+                                scope.launch {
+                                    val confirm= onShowSnackBar(
+                                        UiText.StringResourceId(R.string.confirm_delete),
+                                        UiText.StringResourceId(R.string.delete),
+                                    )
+
+                                    if (confirm) {
+                                        onUiAction(UpcomingEventsUiAction.OnDeleteEvent(event))
+                                    }
+                                }
+                            },
                             modifier = Modifier.padding(bottom = 4.dp)
                         )
                     }

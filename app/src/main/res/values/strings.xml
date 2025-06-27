@@ -13,6 +13,9 @@
     <string name="cancel">Cancel</string>
     <string name="no_events_tap_on_plus_button_to_create_one">No events! Tap on the plus button to create one.</string>
     <string name="please_add_a_title">Please add a title</string>
+    <string name="delete_event">Delete event</string>
+    <string name="confirm_delete">Confirm Delete?</string>
+    <string name="delete">Delete</string>
 
     <string name="events_upcoming_in_the_next_seven_days">Events Upcoming in the next 7 days</string>
 </resources>

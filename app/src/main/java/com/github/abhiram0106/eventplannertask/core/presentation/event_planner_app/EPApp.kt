@@ -115,6 +115,7 @@ fun EPApp(
                         snackBarHostState.showSnackbar(
                             message = message.asStringNonComposable(context),
                             actionLabel = actionLabel?.asStringNonComposable(context),
+                            withDismissAction = actionLabel != null
                         ) == SnackbarResult.ActionPerformed
                     },
                     onSelectEvent = { showBottomSheet(it) }

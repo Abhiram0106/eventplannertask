@@ -35,10 +35,11 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun HomeRoot(
-    onSelectEvent: suspend (EventData) -> Unit,
     viewModel: HomeViewModel = viewModel(
         factory = HomeViewModelFactory(App.homeModule.homeRepository)
-    )
+    ),
+    onSelectEvent: suspend (EventData) -> Unit,
+    onShowSnackBar: suspend (message: UiText, actionLabel: UiText?) -> Boolean,
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -46,7 +47,8 @@ fun HomeRoot(
     HomeScreen(
         uiState = uiState,
         onUiAction = viewModel::onUiAction,
-        onSelectEvent = onSelectEvent
+        onSelectEvent = onSelectEvent,
+        onShowSnackBar = onShowSnackBar
     )
 }
 
@@ -56,6 +58,7 @@ fun HomeScreen(
     uiState: HomeUiState,
     onUiAction: (HomeUiAction) -> Unit,
     onSelectEvent: suspend (EventData) -> Unit,
+    onShowSnackBar: suspend (message: UiText, actionLabel: UiText?) -> Boolean,
 ) {
 
     val scope = rememberCoroutineScope()
@@ -109,6 +112,18 @@ fun HomeScreen(
                             title = event.title,
                             description = event.description,
                             onClick = { scope.launch { onSelectEvent(event) } },
+                            onDeleteItem = {
+                                scope.launch {
+                                    val confirm= onShowSnackBar(
+                                        UiText.StringResourceId(R.string.confirm_delete),
+                                        UiText.StringResourceId(R.string.delete),
+                                    )
+
+                                    if (confirm) {
+                                        onUiAction(HomeUiAction.OnDeleteEvent(event))
+                                    }
+                                }
+                            },
                             modifier = Modifier.padding(bottom = 4.dp)
                         )
                     }
