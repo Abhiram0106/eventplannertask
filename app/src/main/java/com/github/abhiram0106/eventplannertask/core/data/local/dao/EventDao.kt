@@ -14,8 +14,14 @@ interface EventDao {
     @Query("SELECT * FROM EventEntity WHERE date = :date ORDER BY id ASC")
     fun getEventsByDate(date: LocalDate): Flow<List<EventEntity>>
 
-    @Query("SELECT * FROM EventEntity WHERE strftime('%m', date) = :month ORDER BY id ASC")
-    fun getEventsByMonth(month: Int): Flow<List<EventEntity>>
+    @Query(
+        """
+    SELECT * FROM EventEntity
+    WHERE strftime('%Y', date) = :year AND strftime('%m', date) = :month
+    ORDER BY id ASC
+"""
+    )
+    fun getEventsByMonth(month: String, year: String): Flow<List<EventEntity>>
 
     @Query(
         """

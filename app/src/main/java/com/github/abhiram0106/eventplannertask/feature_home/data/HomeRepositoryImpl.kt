@@ -20,8 +20,10 @@ class HomeRepositoryImpl(
         return eventDao.getEventsByDate(date).map { it.toMappedAsTimeAndLocal() }
     }
 
-    override suspend fun getEventsByMonth(month: Int): Flow<List<LocalDate>> {
-        return eventDao.getEventsByMonth(month).map { it.asDate() }
+    override suspend fun getEventsByMonth(month: Int, year: Int): Flow<List<LocalDate>> {
+        val monthStr = month.toString().padStart(2, '0')
+        val yearStr = year.toString()
+        return eventDao.getEventsByMonth(monthStr, yearStr).map { it.asDate() }
     }
 
     override suspend fun getUpcomingEvents(): Flow<List<EventData>> {

@@ -9,6 +9,7 @@ import com.github.abhiram0106.eventplannertask.feature_home.presentation.state_a
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -23,7 +24,7 @@ class HomeViewModel(
     val uiState = _uiState
         .onStart {
             observeSelectedMonth()
-            observeSelectedMonth()
+            observeSelectedDate()
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
@@ -34,7 +35,10 @@ class HomeViewModel(
         when (action) {
             is HomeUiAction.OnCurrentMonthChanged -> {
                 _uiState.update {
-                    it.copy(selectedMonth = action.month)
+                    it.copy(
+                        scrolledMonth = action.month,
+                        scrolledYear = action.year
+                    )
                 }
             }
 
@@ -50,20 +54,28 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun observeSelectedMonth() = viewModelScope.launch {
-        _uiState.map { it.selectedMonth }
-            .collectLatest { month ->
-                homeRepository.getEventsByMonth(month).collectLatest { dates ->
-                    _uiState.update {
-                        it.copy(
-                            datesWhereAtLeastOneEventExists = dates
-                        )
-                    }
+    private fun observeSelectedMonth() = viewModelScope.launch {
+
+        combine(
+            _uiState.map { it.scrolledMonth },
+            _uiState.map { it.scrolledYear }
+        ) { month, year ->
+            month to year
+        }.collectLatest { (month, year) ->
+            homeRepository.getEventsByMonth(
+                month = month,
+                year = year
+            ).collectLatest { dates ->
+                _uiState.update {
+                    it.copy(
+                        datesWhereAtLeastOneEventExists = dates
+                    )
                 }
             }
+        }
     }
 
-    private suspend fun observeSelectedDate() = viewModelScope.launch {
+    private fun observeSelectedDate() = viewModelScope.launch {
         _uiState.map { it.selectedDate }
             .collectLatest { date ->
                 homeRepository.getEventsByDate(date).collectLatest { events ->

@@ -63,7 +63,7 @@ fun CalendarComponent(
     selectedDate: LocalDate,
     datesWhereAtLeastOneEventExists: List<LocalDate>,
     onSelectDate: (LocalDate) -> Unit,
-    onCurrentMonthChanged: (monthNumber: Int) -> Unit
+    onCurrentMonthChanged: (monthNumber: Int, year: Int) -> Unit
 ) {
 
     val currentDate = rememberSaveable { selectedDate }
@@ -102,8 +102,14 @@ fun CalendarComponent(
         )
         val visibleMonth = rememberFirstVisibleMonthAfterScroll(state = monthState)
 
-        LaunchedEffect(key1 = visibleMonth.yearMonth.monthValue) {
-            onCurrentMonthChanged(visibleMonth.yearMonth.monthValue)
+        LaunchedEffect(
+            key1 = visibleMonth.yearMonth.monthValue,
+            key2 = visibleMonth.yearMonth.year
+        ) {
+            onCurrentMonthChanged(
+                visibleMonth.yearMonth.monthValue,
+                visibleMonth.yearMonth.year
+            )
         }
 
         SimpleCalendarTitle(

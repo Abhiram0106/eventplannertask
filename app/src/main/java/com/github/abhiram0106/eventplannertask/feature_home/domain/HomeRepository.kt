@@ -9,7 +9,7 @@ interface HomeRepository {
 
     suspend fun getEventsByDate(date: LocalDate): Flow<Map<LocalTime, List<EventData>>>
 
-    suspend fun getEventsByMonth(month: Int): Flow<List<LocalDate>>
+    suspend fun getEventsByMonth(month: Int, year: Int): Flow<List<LocalDate>>
 
     suspend fun getUpcomingEvents(): Flow<List<EventData>>
 
