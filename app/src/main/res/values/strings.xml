@@ -12,4 +12,5 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="no_events_tap_on_plus_button_to_create_one">No events! Tap on the plus button to create one.</string>
+    <string name="please_add_a_title">Please add a title</string>
 </resources>

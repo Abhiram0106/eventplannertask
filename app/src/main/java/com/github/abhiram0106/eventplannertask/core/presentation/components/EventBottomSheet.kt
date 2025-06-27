@@ -63,6 +63,9 @@ fun EventBottomSheet(
     var shouldShowDatePicker by remember {
         mutableStateOf(false)
     }
+    var showErrors by remember {
+        mutableStateOf(false)
+    }
 
     val currentTime = Calendar.getInstance()
     val timePickerState = rememberTimePickerState(
@@ -96,7 +99,13 @@ fun EventBottomSheet(
                 }
 
                 Button(
-                    onClick = { onSave(eventData) }
+                    onClick = {
+                        if (eventData.title.isEmpty()) {
+                            showErrors = true
+                        } else {
+                            onSave(eventData)
+                        }
+                    }
                 ) {
                     Text(
                         text = stringResource(R.string.save),
@@ -117,6 +126,16 @@ fun EventBottomSheet(
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold
                     )
+                },
+                isError = showErrors && eventData.title.isEmpty(),
+                supportingText = {
+                    if (showErrors && eventData.title.isEmpty()) {
+                        Text(
+                            text = stringResource(R.string.please_add_a_title),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
