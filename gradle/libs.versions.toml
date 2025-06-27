@@ -11,6 +11,8 @@ composeBom = "2025.06.01"
 navigation-compose = "2.8.0-alpha12"
 kotlinSerialization = "1.8.1"
 calendar = "2.7.0"
+room = "2.7.2"
+kspVersion = "2.1.21-2.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,8 +35,13 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 
 calendar-composable = { group = "com.kizitonwose.calendar", name = "compose", version.ref = "calendar" }
 
+room = { group = "androidx.room", name = "room-runtime", version.ref = "room"}
+room-ksp = { group = "androidx.room", name = "room-compiler", version.ref = "room"}
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room"}
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion"}

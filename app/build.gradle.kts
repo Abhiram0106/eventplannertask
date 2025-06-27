@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -62,4 +63,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.calendar.composable)
+
+    implementation(libs.room)
+    ksp(libs.room.ksp)
+    implementation(libs.room.ktx)
 }
