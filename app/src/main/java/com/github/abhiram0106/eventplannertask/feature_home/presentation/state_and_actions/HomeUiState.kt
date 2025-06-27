@@ -7,6 +7,7 @@ import java.time.LocalTime
 data class HomeUiState(
     val selectedDate: LocalDate = LocalDate.now(),
     val events: Map<LocalTime, List<EventData>> = emptyMap(),
+    val selectedMonth: Int = LocalDate.now().monthValue,
     val datesWhereAtLeastOneEventExists: List<LocalDate> = emptyList(),
     val isLoading: Boolean = false,
 )

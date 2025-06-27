@@ -17,7 +17,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.github.abhiram0106.eventplannertask.App
 import com.github.abhiram0106.eventplannertask.core.presentation.UiText
 import com.github.abhiram0106.eventplannertask.core.util.generateEventList
 import com.github.abhiram0106.eventplannertask.core.util.toDisplayString
@@ -35,7 +38,9 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun HomeRoot(
     onShowSnackBar: suspend (message: UiText, actionLabel: UiText?) -> Boolean,
-    viewModel: HomeViewModel = viewModel(),
+    viewModel: HomeViewModel = viewModel(
+        factory = HomeViewModelFactory(App.homeModule.homeRepository)
+    )
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
