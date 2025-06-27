@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -17,15 +18,23 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.github.abhiram0106.eventplannertask.App
 import com.github.abhiram0106.eventplannertask.ui.theme.AppTheme
 import com.github.abhiram0106.eventplannertask.R
 import com.github.abhiram0106.eventplannertask.core.navigation.EPNavHost
+import com.github.abhiram0106.eventplannertask.core.presentation.components.EventBottomSheet
+import com.github.abhiram0106.eventplannertask.feature_home.domain.model.EventData
+import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalTime
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EPApp(
     appState: EPAppState = rememberAppState(),
@@ -33,6 +42,25 @@ fun EPApp(
 
     val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
+    val bottomSheetState = rememberModalBottomSheetState()
+
+    val scope = rememberCoroutineScope()
+
+    var selectedEventData by remember {
+        mutableStateOf<EventData?>(null)
+    }
+    val showBottomSheet: (EventData) -> Unit = { eventData ->
+        selectedEventData = eventData
+        scope.launch {
+            bottomSheetState.show()
+        }
+    }
+
+    LaunchedEffect(selectedEventData) {
+        if (selectedEventData == null) {
+            bottomSheetState.hide()
+        }
+    }
 
     AppTheme {
         Scaffold(
@@ -61,7 +89,7 @@ fun EPApp(
                     },
                     floatingActionButton = {
                         FloatingActionButton(
-                            onClick = { /* TODO : open bottom sheet */ },
+                            onClick = { scope.launch { showBottomSheet(EventData.blank()) } },
                             containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
                         ) {
@@ -88,8 +116,23 @@ fun EPApp(
                             message = message.asStringNonComposable(context),
                             actionLabel = actionLabel?.asStringNonComposable(context),
                         ) == SnackbarResult.ActionPerformed
-                    }
+                    },
+                    onSelectEvent = { showBottomSheet(it) }
                 )
+                if (selectedEventData != null) {
+                    EventBottomSheet(
+                        sheetState = bottomSheetState,
+                        eventData = selectedEventData!!,
+                        onUpdateEventDate = { selectedEventData = it },
+                        onDismiss = { selectedEventData = null },
+                        onSave = {
+                            scope.launch {
+                                App.homeModule.homeRepository.upsertEvent(it)
+                                selectedEventData = null
+                            }
+                        }
+                    )
+                }
             }
         }
     }

@@ -4,19 +4,27 @@ import com.github.abhiram0106.eventplannertask.feature_home.domain.model.EventDa
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.Year
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import kotlin.time.Instant
 
 fun LocalTime.toDisplayString(): String {
     return this.format(DateTimeFormatter.ofPattern("hh:mm a"))
 }
 
-fun LocalDate.toDisplayText(): String {
+fun LocalDate.toDisplayString(): String {
     val currentYear = Year.now().value
     return if (this.year == currentYear) {
         this.format(DateTimeFormatter.ofPattern("dd MMM"))
     } else {
         this.format(DateTimeFormatter.ofPattern("dd MMM yyyy"))
     }
+}
+
+fun Long?.toLocalDate(): LocalDate {
+    return java.time.Instant.ofEpochMilli(this ?: System.currentTimeMillis())
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate()
 }
 
 fun generateEventList(): List<EventData> {

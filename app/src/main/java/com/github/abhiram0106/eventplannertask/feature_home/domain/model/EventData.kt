@@ -9,4 +9,14 @@ data class EventData(
     val description: String,
     val date: LocalDate,
     val time: LocalTime
-)
+) {
+    companion object {
+        fun blank(): EventData = EventData(
+            id = 0,
+            title = "",
+            description = "",
+            date = LocalDate.now(),
+            time = LocalTime.now()
+        )
+    }
+}

@@ -47,10 +47,6 @@ class HomeViewModel(
                     it.copy(selectedDate = action.date)
                 }
             }
-
-            is HomeUiAction.OnSelectEvent -> {
-                // todo : show populated bottom sheet
-            }
         }
     }
 

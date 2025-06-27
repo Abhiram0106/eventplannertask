@@ -11,11 +11,13 @@ import androidx.navigation.compose.NavHost
 import com.github.abhiram0106.eventplannertask.core.navigation.nav_graphs.homeGraph
 import com.github.abhiram0106.eventplannertask.core.navigation.nav_graphs.upcomingEventsGraph
 import com.github.abhiram0106.eventplannertask.core.presentation.UiText
+import com.github.abhiram0106.eventplannertask.feature_home.domain.model.EventData
 
 @Composable
 fun EPNavHost(
     navHostController: NavHostController,
     onShowSnackBar: suspend (message: UiText, actionLabel: UiText?) -> Boolean,
+    onSelectEvent: suspend (EventData) -> Unit,
 ) {
 
     NavHost(
@@ -62,7 +64,10 @@ fun EPNavHost(
             )
         }
     ) {
-        homeGraph(onShowSnackBar = onShowSnackBar)
+        homeGraph(
+            onShowSnackBar = onShowSnackBar,
+            onSelectEvent = onSelectEvent
+        )
 
         upcomingEventsGraph(onShowSnackBar = onShowSnackBar)
     }

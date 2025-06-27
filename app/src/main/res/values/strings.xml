@@ -27,4 +27,12 @@
     <string name="ten_pm">10 PM</string>
     <string name="eleven_pm">11 PM</string>
     <string name="twelve_pm">12 AM</string>
+
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="select_date_and_time">Select date and time</string>
+    <string name="close">Close</string>
+    <string name="save">Save</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
 </resources>
